@@ -15,6 +15,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarGroupLabel
 } from "@/components/ui/sidebar"
 
 import {
@@ -56,6 +57,16 @@ export function AppSidebar(props) {
     { title: "Vendors", url: "/dashboard/vendors", icon: <StoreIcon /> }
   ]
 
+  const manualFeaturesSection = [
+    { title: "Manual Pricing", url: "/dashboard/pricing", icon: <StoreIcon /> },
+    { title: "Trending Fares (TYT)", url: "/dashboard/tyt", icon: <LayoutDashboardIcon /> }
+  ]
+
+  const contentSection = [
+    { title: "Package Categories", url: "/dashboard/content/categories", icon: <LayoutDashboardIcon /> },
+    { title: "Tour Packages", url: "/dashboard/content/packages", icon: <StoreIcon /> }
+  ]
+
 
   const analyticsSection = [
     { title: "Booking Analytics", url: "/dashboard/analytics/bookings", icon: <BarChart3Icon /> },
@@ -64,7 +75,6 @@ export function AppSidebar(props) {
 
 
   const adminSection = [
-    { title: "Maunal Pricing", url: "/dashboard/pricing", icon: <UsersIcon /> },
     { title: "Car Categories", url: "/dashboard/carcategory", icon: <UsersIcon /> },
     { title: "User Management", url: "/dashboard/users", icon: <UsersIcon /> },
     { title: "Role Management", url: "/dashboard/roles", icon: <ShieldIcon /> },
@@ -98,19 +108,19 @@ export function AppSidebar(props) {
               <Link
                 href={item.url}
                 className={`
-                  flex items-center gap-3 rounded-md px-3 py-2 transition
+                  flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200
                   ${isActive
-                    ? "bg-black text-white shadow-sm w-full"
-                    : "hover:bg-gray-100 text-gray-700"
+                    ? "bg-blue-50 text-blue-700 shadow-sm w-full font-bold border border-blue-100"
+                    : "hover:bg-slate-50 text-slate-600 font-medium hover:text-slate-900"
                   }
                 `}
               >
 
-                <span className={isActive ? "text-white" : ""}>
+                <span className={isActive ? "text-blue-600" : "text-slate-400"}>
                   {item.icon}
                 </span>
 
-                <span className="font-medium">
+                <span>
                   {item.title}
                 </span>
 
@@ -144,14 +154,24 @@ export function AppSidebar(props) {
 
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 px-3 py-2"
+                className="flex items-center gap-3 px-2 py-3"
               >
 
-                <CommandIcon className="size-5" />
+                <img
+                  src="/logo.png"
+                  alt="CabX"
+                  className="h-10  w-10 object-contain"
+                  onError={(e) => {
+                    // Fallback to text if logo.png is not found in portal public dir
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
 
-                <span className="text-base font-semibold">
-                  CabX
-                </span>
+                {/* Fallback box if image breaks */}
+                <div className="hidden aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-inner">
+                  <span className="font-bold text-xs">CX</span>
+                </div>
 
               </Link>
 
@@ -167,26 +187,33 @@ export function AppSidebar(props) {
 
       {/* CONTENT */}
 
-      <SidebarContent>
+      <SidebarContent className="px-2 pt-4">
 
         {renderMenu(navMain)}
 
-        <div className="px-3 pt-6 text-xs font-semibold text-muted-foreground">
-          Vendors
-        </div>
-
+        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+          Marketplace
+        </SidebarGroupLabel>
         {renderMenu(vendorsSection)}
 
-        <div className="px-3 pt-6 text-xs font-semibold text-muted-foreground">
-          Analytics
-        </div>
+        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+          Manual Features
+        </SidebarGroupLabel>
+        {renderMenu(manualFeaturesSection)}
 
+        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+          Content Features
+        </SidebarGroupLabel>
+        {renderMenu(contentSection)}
+
+        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+          Intelligence
+        </SidebarGroupLabel>
         {renderMenu(analyticsSection)}
 
-        <div className="px-3 pt-6 text-xs font-semibold text-muted-foreground">
-          Administration
-        </div>
-
+        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+          System Administration
+        </SidebarGroupLabel>
         {renderMenu(adminSection)}
 
       </SidebarContent>

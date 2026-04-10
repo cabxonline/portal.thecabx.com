@@ -1,88 +1,59 @@
 "use client"
 
 import { LoginForm } from "@/components/login-form"
-import { CarTaxiFront } from "lucide-react"
 
 export default function LoginPage() {
   return (
-    <div className="relative flex min-h-screen items-center justify-center p-6 md:p-10 overflow-hidden bg-[#0a0a0b]">
+    <div className="h-screen w-full flex bg-slate-50 overflow-hidden selection:bg-blue-100 selection:text-blue-900">
 
-      {/* Stars */}
-      <div className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `
-            radial-gradient(1px 1px at 10% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
-            radial-gradient(1px 1px at 30% 6%, rgba(255,255,255,0.3) 0%, transparent 100%),
-            radial-gradient(1px 1px at 55% 14%, rgba(255,255,255,0.4) 0%, transparent 100%),
-            radial-gradient(1px 1px at 75% 8%, rgba(255,255,255,0.3) 0%, transparent 100%),
-            radial-gradient(1px 1px at 90% 12%, rgba(255,255,255,0.4) 0%, transparent 100%)
-          `
-        }}
-      />
+      {/* LEFT PANE - DIGITAL ASSET (Hidden on Mobile) */}
+      <div className="hidden lg:flex flex-col flex-1 relative overflow-hidden bg-blue-600 items-center justify-center p-8 xl:p-12">
 
-      {/* City Silhouette */}
-      <div className="absolute z-0 left-0 right-0 bottom-[200px] h-[280px] opacity-90"
-        style={{
-          background: `
-            linear-gradient(180deg,#1a1a22,#1a1a22) 0 100%/60px 180px no-repeat,
-            linear-gradient(180deg,#16161e,#16161e) 70px 100%/80px 140px no-repeat,
-            linear-gradient(180deg,#1a1a22,#1a1a22) 160px 100%/50px 220px no-repeat,
-            linear-gradient(180deg,#16161e,#16161e) 220px 100%/90px 160px no-repeat,
-            linear-gradient(180deg,#1a1a22,#1a1a22) 320px 100%/40px 130px no-repeat,
-            linear-gradient(180deg,#16161e,#16161e) 370px 100%/70px 200px no-repeat,
-            linear-gradient(180deg,#1a1a22,#1a1a22) 750px 100%/100px 180px no-repeat,
-            linear-gradient(180deg,#16161e,#16161e) 860px 100%/60px 220px no-repeat
-          `
-        }}
-      />
+        {/* Ambient Glows */}
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-400 opacity-30 blur-[80px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-blue-800 opacity-40 blur-[80px]" />
 
-      {/* Glow */}
-      <div className="absolute z-0 top-[-100px] left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(245,197,24,0.08) 0%, transparent 70%)" }}
-      />
+        {/* Brand Core */}
+        <div className="relative z-10 w-full max-w-md">
+          <div className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-white font-bold animate-pulse"></span>
+            <span className="text-white text-[10px] font-bold uppercase tracking-widest">Global Fleet Command</span>
+          </div>
 
-      {/* Road */}
-      <div className="absolute bottom-0 left-0 right-0 h-[220px] bg-[#111114] z-0">
-        <div className="absolute bottom-[60px] left-[-100%] w-[200%] h-[4px] opacity-70 animate-[roadMove_2s_linear_infinite]"
-          style={{
-            background: "repeating-linear-gradient(90deg, #f5c518 0, #f5c518 60px, transparent 60px, transparent 120px)"
-          }}
-        />
+          <h1 className="text-4xl xl:text-5xl font-black text-white leading-tight tracking-tighter mb-4">
+            Intelligent <br /> Mobility Control
+          </h1>
+
+          <p className="text-sm xl:text-base text-blue-100 leading-relaxed max-w-sm mb-10">
+            Manage drivers, track real-time fleet analytics, and aggressively optimize routes from your central administrative nervous system.
+          </p>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="border-l-2 border-white/30 pl-4">
+              <div className="text-2xl font-black text-white">100%</div>
+              <div className="text-[10px] font-bold tracking-wider text-blue-200 uppercase mt-1">System Uptime</div>
+            </div>
+            <div className="border-l-2 border-white/30 pl-4">
+              <div className="text-2xl font-black text-white">2.4<span className="text-sm text-blue-200">s</span></div>
+              <div className="text-[10px] font-bold tracking-wider text-blue-200 uppercase mt-1">Dispatch Rate</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Animated Cab */}
-      <CabAnimation />
+      {/* RIGHT PANE - LOGIN FORM */}
+      <div className="flex-1 flex flex-col justify-center items-center p-4 sm:p-6 relative">
+        <div className="w-full max-w-[380px] relative z-10">
+          <LoginForm />
+        </div>
 
-      {/* Login Card */}
-      <div className="relative z-10 w-full max-w-[440px]">
-        <LoginForm />
+        {/* Footer */}
+        <p className="absolute bottom-4 text-center text-[10px] text-slate-400 font-medium w-full pointer-events-none">
+          © {new Date().getFullYear()} CabX Platforms Inc. Secure Portal.
+        </p>
+
       </div>
 
     </div>
-  )
-}
-
-function CabAnimation() {
-  return (
-    <svg
-      className="absolute bottom-[80px] z-0 animate-[cabDrive_12s_linear_infinite]"
-      width="220" height="90" viewBox="0 0 220 90" fill="none"
-    >
-      <rect x="10" y="38" width="180" height="42" rx="8" fill="#f5c518" />
-      <path d="M45 38 C48 18,58 14,72 14 L140 14 C154 14,164 18,168 38Z" fill="#f5c518" />
-      <rect x="52" y="18" width="32" height="22" rx="4" fill="#1a1a2e" opacity="0.8" />
-      <rect x="92" y="18" width="32" height="22" rx="4" fill="#1a1a2e" opacity="0.8" />
-      <rect x="132" y="18" width="28" height="22" rx="4" fill="#1a1a2e" opacity="0.8" />
-      <rect x="88" y="6" width="44" height="14" rx="4" fill="#0a0a0b" />
-      <text x="110" y="17" textAnchor="middle" fontFamily="sans-serif" fontWeight="700" fontSize="9" fill="#f5c518">CABX</text>
-      <circle cx="48" cy="80" r="14" fill="#1a1a2e" />
-      <circle cx="48" cy="80" r="8" fill="#2d2d3a" />
-      <circle cx="48" cy="80" r="3" fill="#f5c518" />
-      <circle cx="158" cy="80" r="14" fill="#1a1a2e" />
-      <circle cx="158" cy="80" r="8" fill="#2d2d3a" />
-      <circle cx="158" cy="80" r="3" fill="#f5c518" />
-      <ellipse cx="195" cy="52" rx="10" ry="7" fill="#fffde0" opacity="0.9" />
-      <rect x="10" y="48" width="8" height="14" rx="3" fill="#ff4444" opacity="0.8" />
-    </svg>
   )
 }
