@@ -372,6 +372,7 @@ function SidebarGroupLabel({
   render,
   ...props
 }) {
+  const { asChild, ...otherProps } = props
   return useRender({
     defaultTagName: "div",
     props: mergeProps({
@@ -379,7 +380,7 @@ function SidebarGroupLabel({
         "flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
         className
       ),
-    }, props),
+    }, otherProps),
     render,
     state: {
       slot: "sidebar-group-label",
@@ -393,6 +394,7 @@ function SidebarGroupAction({
   render,
   ...props
 }) {
+  const { asChild, ...otherProps } = props
   return useRender({
     defaultTagName: "button",
     props: mergeProps({
@@ -400,7 +402,7 @@ function SidebarGroupAction({
         "absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 md:after:hidden [&>svg]:size-4 [&>svg]:shrink-0",
         className
       ),
-    }, props),
+    }, otherProps),
     render,
     state: {
       slot: "sidebar-group-action",
@@ -480,11 +482,12 @@ function SidebarMenuButton({
   ...props
 }) {
   const { isMobile, state } = useSidebar()
+  const { asChild, ...otherProps } = props
   const comp = useRender({
     defaultTagName: "button",
     props: mergeProps({
       className: cn(sidebarMenuButtonVariants({ variant, size }), className),
-    }, props),
+    }, otherProps),
     render: !tooltip ? render : <TooltipTrigger render={render} />,
     state: {
       slot: "sidebar-menu-button",
@@ -522,6 +525,7 @@ function SidebarMenuAction({
   showOnHover = false,
   ...props
 }) {
+  const { asChild, ...otherProps } = props
   return useRender({
     defaultTagName: "button",
     props: mergeProps({
@@ -531,7 +535,7 @@ function SidebarMenuAction({
           "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-active/menu-button:text-sidebar-accent-foreground aria-expanded:opacity-100 md:opacity-0",
         className
       ),
-    }, props),
+    }, otherProps),
     render,
     state: {
       slot: "sidebar-menu-action",
@@ -623,6 +627,7 @@ function SidebarMenuSubButton({
   className,
   ...props
 }) {
+  const { asChild, ...otherProps } = props
   return useRender({
     defaultTagName: "a",
     props: mergeProps({
@@ -630,7 +635,7 @@ function SidebarMenuSubButton({
         "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground ring-sidebar-ring outline-hidden group-data-[collapsible=icon]:hidden hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[size=md]:text-sm data-[size=sm]:text-xs data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground",
         className
       ),
-    }, props),
+    }, otherProps),
     render,
     state: {
       slot: "sidebar-menu-sub-button",

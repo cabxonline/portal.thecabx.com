@@ -16,10 +16,17 @@ const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 export default function BookingsAnalytics() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
 
   const fetchData = async () => {
     try {
-      const res = await api("/stats")
+      setLoading(true)
+      const query = new URLSearchParams()
+      if (startDate) query.append("from", startDate)
+      if (endDate) query.append("to", endDate)
+
+      const res = await api(`/stats?${query.toString()}`)
       setData(res)
     } catch (err) {
       console.error("Analytics fetch error:", err)
@@ -30,9 +37,9 @@ export default function BookingsAnalytics() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [startDate, endDate])
 
-  if (loading) {
+  if (loading && !data) {
     return (
       <div className="flex flex-1 items-center justify-center min-h-[calc(100vh-4rem)] bg-slate-50">
         <div className="flex flex-col items-center gap-4">
@@ -51,13 +58,42 @@ export default function BookingsAnalytics() {
       <div className="max-w-7xl mx-auto space-y-8">
 
         {/* Header Block */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Booking Analytics</h1>
-            <p className="text-slate-500 font-medium text-sm">Real-time stats and fleet performance.</p>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">Booking Analytics</h1>
+            <p className="text-slate-500 font-medium text-sm mt-1">Real-time stats and fleet performance analysis.</p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full text-[10px] font-bold text-blue-600 uppercase tracking-widest animate-pulse">
-            <span className="w-2 h-2 rounded-full bg-blue-600"></span> Live Monitoring
+
+          <div className="flex flex-wrap items-center gap-4">
+             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 p-1.5 rounded-2xl group focus-within:border-blue-500 transition-all">
+                <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-xl shadow-sm border border-slate-100">
+                   <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">From</span>
+                   <input
+                     type="date"
+                     value={startDate}
+                     onChange={(e) => setStartDate(e.target.value)}
+                     className="bg-transparent text-xs font-bold text-slate-700 outline-none cursor-pointer"
+                   />
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-xl shadow-sm border border-slate-100">
+                   <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">To</span>
+                   <input
+                     type="date"
+                     value={endDate}
+                     onChange={(e) => setEndDate(e.target.value)}
+                     className="bg-transparent text-xs font-bold text-slate-700 outline-none cursor-pointer"
+                   />
+                </div>
+                <button
+                  onClick={() => { setStartDate(""); setEndDate(""); }}
+                  className="px-3 py-2 text-[10px] font-black text-slate-400 hover:text-rose-500 uppercase tracking-widest transition-colors"
+                >
+                  Reset
+                </button>
+             </div>
+             <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full text-[10px] font-bold text-blue-600 uppercase tracking-widest shadow-sm">
+               <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span> Live Monitoring
+             </div>
           </div>
         </div>
 

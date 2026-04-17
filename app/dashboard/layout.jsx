@@ -15,14 +15,11 @@ export default function DashboardLayout({ children }) {
 
       <AppSidebar variant="inset" />
 
-      <SidebarInset>
-
+      <SidebarInset className="overflow-hidden">
         <SiteHeader />
-
-        <main className="flex flex-1 flex-col p-4 lg:p-6">
+        <main className="flex flex-1 flex-col p-4 lg:p-6 min-w-0">
           {children}
         </main>
-
       </SidebarInset>
 
     </SidebarProvider>

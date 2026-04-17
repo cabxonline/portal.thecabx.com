@@ -46,7 +46,6 @@ export function AppSidebar(props) {
 
   const navMain = [
     { title: "Dashboard", url: "/dashboard", icon: <LayoutDashboardIcon /> },
-    { title: "Bookings", url: "/dashboard/bookings", icon: <ClipboardListIcon /> },
     { title: "Customers", url: "/dashboard/customers", icon: <UsersIcon /> },
     { title: "Drivers", url: "/dashboard/drivers", icon: <Users2Icon /> },
     { title: "Fleet", url: "/dashboard/fleet", icon: <CarIcon /> }
@@ -54,17 +53,27 @@ export function AppSidebar(props) {
 
 
   const vendorsSection = [
-    { title: "Vendors", url: "/dashboard/vendors", icon: <StoreIcon /> }
+    // { title: "Vendors", url: "/dashboard/vendors", icon: <StoreIcon /> }
+  ]
+
+  const bookingSection = [
+    { title: "All Bookings", url: "/dashboard/bookings", icon: <ClipboardListIcon /> },
+    { title: "New Booking", url: "/dashboard/bookings?status=new_booking", icon: <ClipboardListIcon /> },
+    { title: "Confirmed", url: "/dashboard/bookings?status=confirmed", icon: <ClipboardListIcon /> },
+    { title: "Dispatched", url: "/dashboard/bookings?status=dispatched", icon: <ClipboardListIcon /> },
+    { title: "Completed", url: "/dashboard/bookings?status=completed", icon: <ClipboardListIcon /> },
+    { title: "Cancelled", url: "/dashboard/bookings?status=cancelled", icon: <ClipboardListIcon /> }
   ]
 
   const manualFeaturesSection = [
-    { title: "Manual Pricing", url: "/dashboard/pricing", icon: <StoreIcon /> },
+    // { title: "Manual Pricing", url: "/dashboard/pricing", icon: <StoreIcon /> },
     { title: "Trending Fares (TYT)", url: "/dashboard/tyt", icon: <LayoutDashboardIcon /> }
   ]
 
   const contentSection = [
     { title: "Package Categories", url: "/dashboard/content/categories", icon: <LayoutDashboardIcon /> },
-    { title: "Tour Packages", url: "/dashboard/content/packages", icon: <StoreIcon /> }
+    { title: "Tour Packages", url: "/dashboard/content/packages", icon: <StoreIcon /> },
+    { title: "Package Enquiries", url: "/dashboard/content/enquiries", icon: <ClipboardListIcon /> }
   ]
 
 
@@ -192,9 +201,14 @@ export function AppSidebar(props) {
         {renderMenu(navMain)}
 
         <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+          Booking
+        </SidebarGroupLabel>
+        {renderMenu(bookingSection)}
+
+        {/* <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
           Marketplace
         </SidebarGroupLabel>
-        {renderMenu(vendorsSection)}
+        {renderMenu(vendorsSection)} */}
 
         <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
           Manual Features

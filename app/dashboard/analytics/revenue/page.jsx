@@ -17,10 +17,17 @@ const COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
 export default function RevenueAnalytics() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
 
   const fetchData = async () => {
     try {
-      const res = await api("/stats")
+      setLoading(true)
+      const query = new URLSearchParams()
+      if (startDate) query.append("from", startDate)
+      if (endDate) query.append("to", endDate)
+
+      const res = await api(`/stats?${query.toString()}`)
       setData(res)
     } catch (err) {
       console.error("Revenue fetch error:", err)
@@ -31,9 +38,9 @@ export default function RevenueAnalytics() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [startDate, endDate])
 
-  if (loading) {
+  if (loading && !data) {
     return (
       <div className="flex flex-1 items-center justify-center min-h-[calc(100vh-4rem)] bg-slate-50">
         <div className="flex flex-col items-center gap-4">
@@ -52,19 +59,47 @@ export default function RevenueAnalytics() {
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header Block */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
           <div>
-             <h1 className="text-4xl font-bold text-slate-900">Revenue Reports</h1>
-             <p className="text-slate-500 font-bold text-sm mt-1 uppercase tracking-widest text-[10px]">Fiscal Year 2024-25 Analysis</p>
+             <h1 className="text-4xl font-black text-slate-900 tracking-tight">Revenue Reports</h1>
+             <p className="text-slate-500 font-bold text-sm mt-1 uppercase tracking-widest text-[10px]">Fiscal Intelligence Grid</p>
           </div>
-          <div className="flex items-center gap-3">
-             <button className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-2xl text-xs font-bold hover:bg-slate-800 transition-all shadow-lg active:scale-95">
-                <Download className="w-4 h-4" />
-                Export CSV
-             </button>
-             <button className="p-2.5 bg-white border border-slate-200 rounded-2xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all">
-                <Filter className="w-5 h-5" />
-             </button>
+
+          <div className="flex flex-wrap items-center gap-4">
+             {/* Date Range Filter */}
+             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 p-1.5 rounded-2xl group focus-within:border-blue-500 transition-all">
+                <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-xl shadow-sm border border-slate-100">
+                   <span className="text-[9px] font-black uppercase text-slate-400 tracking-[0.2em]">Start</span>
+                   <input
+                     type="date"
+                     value={startDate}
+                     onChange={(e) => setStartDate(e.target.value)}
+                     className="bg-transparent text-[10px] font-black text-slate-700 outline-none cursor-pointer"
+                   />
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-xl shadow-sm border border-slate-100">
+                   <span className="text-[9px] font-black uppercase text-slate-400 tracking-[0.2em]">End</span>
+                   <input
+                     type="date"
+                     value={endDate}
+                     onChange={(e) => setEndDate(e.target.value)}
+                     className="bg-transparent text-[10px] font-black text-slate-700 outline-none cursor-pointer"
+                   />
+                </div>
+                <button
+                  onClick={() => { setStartDate(""); setEndDate(""); }}
+                  className="px-3 py-2 text-[10px] font-black text-slate-400 hover:text-rose-500 uppercase tracking-widest transition-colors"
+                >
+                  Reset
+                </button>
+             </div>
+
+             <div className="flex items-center gap-3">
+                <button className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-2xl text-[10px] uppercase font-black tracking-widest hover:bg-slate-800 transition-all shadow-lg active:scale-95">
+                   <Download className="w-4 h-4" />
+                   Export
+                </button>
+             </div>
           </div>
         </div>
 
