@@ -147,15 +147,13 @@ export default function TYTEnquiryManager() {
                                 <tr className="bg-slate-50/50 border-b border-slate-100">
                                     <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest">Customer Intel</th>
                                     <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest">Trade Route Details</th>
-                                    <th className="px-6 py-5 text-[10px) font-black uppercase text-slate-400 tracking-widest text-center">Logistics</th>
-                                    <th className="px-6 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest">Current Status</th>
                                     <th className="px-8 py-5 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-50">
                                 {enquiries.length === 0 ? (
                                     <tr>
-                                        <td colSpan="5" className="px-8 py-20 text-center">
+                                        <td colSpan="4" className="px-8 py-20 text-center">
                                             <div className="flex flex-col items-center gap-3">
                                                 <div className="p-4 bg-slate-100 rounded-full">
                                                     <Inbox className="w-8 h-8 text-slate-300" />
@@ -200,19 +198,6 @@ export default function TYTEnquiryManager() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-6">
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-xs font-black text-slate-700 uppercase flex items-center gap-2">
-                                                        <Calendar className="w-3.5 h-3.5 text-indigo-600" />
-                                                        {new Date(enquiry.fromDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
-                                                    </span>
-                                                    <div className="w-px h-3 bg-slate-200 my-0.5"></div>
-                                                    <span className="text-xs font-black text-slate-400 uppercase flex items-center gap-2 opacity-60">
-                                                        <Calendar className="w-3.5 h-3.5" />
-                                                        {new Date(enquiry.toDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-6">
                                                 <div className="relative group/select w-fit">
                                                     {updatingId === enquiry.id ? (
                                                         <div className="animate-pulse px-3 py-1 bg-slate-100 rounded-full h-7 w-24"></div>
@@ -238,7 +223,10 @@ export default function TYTEnquiryManager() {
                                                 <button
                                                     onClick={() => {
                                                         const msg = enquiry.message || "No specific requirements provided.";
-                                                        alert(`CUSTOMER MESSAGE:\n\n"${msg}"`);
+                                                        toast.info("Customer Message", {
+                                                            description: msg,
+                                                            duration: 5000,
+                                                        });
                                                     }}
                                                     className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-bold-50 rounded-2xl transition-all border border-transparent hover:border-indigo-100 active:scale-95"
                                                     title="View Message"

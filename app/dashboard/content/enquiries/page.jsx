@@ -237,7 +237,10 @@ export default function EnquiryManager() {
                                                 <button
                                                     onClick={() => {
                                                         const msg = enquiry.message || "No specific requirements provided.";
-                                                        alert(`CUSTOMER MESSAGE:\n\n"${msg}"`);
+                                                        toast.info("Customer Message", {
+                                                            description: msg,
+                                                            duration: 5000,
+                                                        });
                                                     }}
                                                     className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-2xl transition-all border border-transparent hover:border-blue-100 active:scale-95"
                                                     title="View Message"
