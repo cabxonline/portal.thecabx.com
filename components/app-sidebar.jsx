@@ -73,7 +73,8 @@ export function AppSidebar(props) {
   const contentSection = [
     { title: "Package Categories", url: "/dashboard/content/categories", icon: <LayoutDashboardIcon /> },
     { title: "Tour Packages", url: "/dashboard/content/packages", icon: <StoreIcon /> },
-    { title: "Package Enquiries", url: "/dashboard/content/enquiries", icon: <ClipboardListIcon /> }
+    { title: "Package Enquiries", url: "/dashboard/content/enquiries", icon: <ClipboardListIcon /> },
+    { title: "TYT Enquiries", url: "/dashboard/content/tyt-enquiries", icon: <ClipboardListIcon /> }
   ]
 
 
