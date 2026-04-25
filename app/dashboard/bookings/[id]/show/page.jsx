@@ -116,7 +116,7 @@ export default function ShowBooking() {
         body: JSON.stringify({
           driverId: selectedDriver,
           carId: selectedCar,
-          status: "new_booking"
+          status: "dispatched"
         })
       })
       toast.success(isReassigning ? "Fleet assignment updated!" : "Personnel and fleet successfully deployed!")
@@ -133,7 +133,7 @@ export default function ShowBooking() {
   const handleCashCollection = async () => {
     try {
       setPaymentActionLoading(true)
-      const res = await api(`/bookings/${id}/payment/cash`, { 
+      const res = await api(`/bookings/${id}/payment/cash`, {
         method: "POST",
         body: JSON.stringify({ amount: collectionAmount })
       })
@@ -258,7 +258,7 @@ export default function ShowBooking() {
           <svg className="animate-spin w-8 h-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
             <path d="M21 12a9 9 0 11-4-7.5" />
           </svg>
-          <p className="text-sm font-bold text-slate-500 uppercase tracking-widest text-center">Loading Ticket <br /> Details</p>
+          <p className="text-sm font-bold text-slate-500 uppercase tracking-widest text-center">Loading Booking <br /> Details</p>
         </div>
       </div>
     )
@@ -273,7 +273,7 @@ export default function ShowBooking() {
 
   const extraKmUsageCost = (Number(totalKm) * Number(costPerKm))
   const extraCharges = extraKmUsageCost + (Number(tollsCost) || 0)
-  
+
   const totalFare = (booking?.fare || 0) + extraCharges
 
   const pendingDues = totalFare - amountPaid
@@ -324,7 +324,7 @@ export default function ShowBooking() {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-                  Ticket #{booking?.bookingNumber || booking?.id || "Unknown"}
+                  {booking?.bookingNumber || booking?.id || "Unknown"}
                 </h1>
                 <span
                   className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border
@@ -339,7 +339,7 @@ export default function ShowBooking() {
                 >
                   {booking?.status || "Processing"}
                 </span>
-                
+
                 <span
                   className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border
                   ${booking?.paymentStatus === "paid"
@@ -431,7 +431,7 @@ export default function ShowBooking() {
             <div className="bg-white rounded-[1.5rem] p-6 shadow-sm border border-slate-200">
               <h2 className="text-base font-bold text-slate-900 mb-5 flex items-center gap-2">
                 <Navigation className="w-5 h-5 text-blue-600" />
-                Travel Itinerary
+                Travel Package
               </h2>
 
               <div className="relative pl-6 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100">
@@ -622,7 +622,7 @@ export default function ShowBooking() {
                   <div className="flex-1 flex flex-col gap-2">
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400">₹</span>
-                      <input 
+                      <input
                         type="number"
                         placeholder="Amount (Partial or Full)"
                         className="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold outline-none focus:border-slate-400"
@@ -690,12 +690,12 @@ export default function ShowBooking() {
                             <p className="text-sm font-black text-slate-900 italic">₹{payment.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
                           </td>
                           <td className="px-4 py-4 text-right">
-                             <span className={cn(
-                               "text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg",
-                               payment.status === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
-                             )}>
-                               {payment.status === "paid" ? "Captured" : payment.status}
-                             </span>
+                            <span className={cn(
+                              "text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg",
+                              payment.status === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
+                            )}>
+                              {payment.status === "paid" ? "Captured" : payment.status}
+                            </span>
                           </td>
                         </tr>
                       ))
@@ -751,26 +751,26 @@ export default function ShowBooking() {
                 <div>
                   <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-0.5">Primary Passenger</p>
                   <p className="font-black text-slate-900 text-lg leading-tight">{booking?.guestName || booking?.user?.name || "Guest"}</p>
-                  
+
                   <div className="flex flex-col gap-1 mt-2">
-                     <a href={`tel:${booking?.mobileNumber || booking?.user?.phone}`} className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1.5 font-sans">
-                        <Phone className="w-3 h-3" /> {booking?.mobileNumber || booking?.user?.phone || "No Phone"}
-                     </a>
-                     <p className="text-[10px] font-medium text-slate-400 flex items-center gap-1.5">
-                        <Mail className="w-3 h-3" /> {booking?.user?.email || "No Email Provided"}
-                     </p>
+                    <a href={`tel:${booking?.mobileNumber || booking?.user?.phone}`} className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1.5 font-sans">
+                      <Phone className="w-3 h-3" /> {booking?.mobileNumber || booking?.user?.phone || "No Phone"}
+                    </a>
+                    <p className="text-[10px] font-medium text-slate-400 flex items-center gap-1.5">
+                      <Mail className="w-3 h-3" /> {booking?.user?.email || "No Email Provided"}
+                    </p>
                   </div>
 
                   <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-50">
-                     <span className="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest border border-slate-200">{booking?.gender || "Not Specified"}</span>
-                     {booking?.corporateName && (
-                        <span className="px-2 py-0.5 rounded-lg bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase tracking-widest border border-indigo-100 flex items-center gap-1 group/corp relative cursor-help">
-                           <Building2 className="w-3 h-3" /> Corporate
-                           <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] font-black px-2 py-1 rounded opacity-0 group-hover/corp:opacity-100 transition-opacity whitespace-nowrap shadow-xl">
-                              {booking.corporateName}
-                           </div>
-                        </span>
-                     )}
+                    <span className="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest border border-slate-200">{booking?.gender || "Not Specified"}</span>
+                    {booking?.corporateName && (
+                      <span className="px-2 py-0.5 rounded-lg bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase tracking-widest border border-indigo-100 flex items-center gap-1 group/corp relative cursor-help">
+                        <Building2 className="w-3 h-3" /> Corporate
+                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] font-black px-2 py-1 rounded opacity-0 group-hover/corp:opacity-100 transition-opacity whitespace-nowrap shadow-xl">
+                          {booking.corporateName}
+                        </div>
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -791,7 +791,6 @@ export default function ShowBooking() {
                     className="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-50 transition-all font-bold text-slate-700 appearance-none cursor-pointer"
                   >
                     <option value="new_booking">🆕 New Booking</option>
-                    <option value="pending">🟡 Pending</option>
                     <option value="confirmed">🔵 Confirmed</option>
                     <option value="dispatched">🚚 Dispatched</option>
                     <option value="completed">🟢 Completed</option>

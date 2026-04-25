@@ -7,7 +7,6 @@ import { toast } from "sonner"
 
 const statusConfig = {
   new_booking: { color: "bg-slate-100 text-slate-700 border-slate-200", row: "bg-white", icon: "🆕", label: "New Booking" },
-  pending: { color: "bg-amber-100 text-amber-700 border-amber-200", row: "bg-amber-50/20", icon: "🟡", label: "Pending" },
   confirmed: { color: "bg-blue-100 text-blue-700 border-blue-200", row: "bg-blue-50/20", icon: "🔵", label: "Confirmed" },
   dispatched: { color: "bg-indigo-100 text-indigo-700 border-indigo-200", row: "bg-indigo-50/10", icon: "🚚", label: "Dispatched" },
   completed: { color: "bg-emerald-100 text-emerald-700 border-emerald-200", row: "bg-emerald-50/40", icon: "🟢", label: "Completed" },
@@ -103,62 +102,62 @@ function BookingsContent() {
     <div className="flex flex-1 flex-col bg-slate-50 min-h-[calc(100vh-4rem)]">
       <div className="w-full px-4 md:px-8 py-6 md:py-8">
 
-          {/* PAGE HEADER */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <div>
-              <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-                Operational Ledger <div className="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-md tracking-widest uppercase italic border border-blue-200">Full Visibility</div>
-              </h1>
-              <p className="text-slate-500 font-medium text-sm mt-1">Comprehensive audit trace of all network activity and financial settlements.</p>
-            </div>
-
-            <a
-              href="/dashboard/bookings/create"
-              className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-2xl font-black shadow-xl transition-all active:scale-95 text-xs uppercase tracking-widest"
-            >
-              Create New Dispatch +
-            </a>
+        {/* PAGE HEADER */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+              Operational Ledger <div className="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-md tracking-widest uppercase italic border border-blue-200">Full Visibility</div>
+            </h1>
+            <p className="text-slate-500 font-medium text-sm mt-1">Comprehensive audit trace of all network activity and financial settlements.</p>
           </div>
 
-          {/* FILTERS */}
-          <div className="flex flex-wrap items-center gap-4 mb-8 bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200">
-            <div className="flex-1 min-w-[300px] relative">
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-              <input
-                placeholder="Search by ID, Customer, Phone or Location..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all font-bold placeholder-slate-400 shadow-inner"
-              />
-            </div>
+          <a
+            href="/dashboard/bookings/create"
+            className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-2xl font-black shadow-xl transition-all active:scale-95 text-xs uppercase tracking-widest"
+          >
+            Create New Dispatch +
+          </a>
+        </div>
 
-            <select
-              value={statusFilter}
-              onChange={(e) => handleStatusChangeFilter(e.target.value)}
-              className="min-w-[200px] px-5 py-2.5 border border-slate-200 rounded-xl text-xs bg-slate-50 outline-none focus:bg-white focus:border-blue-500 font-black text-slate-700 uppercase focus:ring-4 focus:ring-blue-50 transition-all appearance-none cursor-pointer tracking-widest"
-            >
-              <option value="all">💳 All Transactions</option>
-              {Object.entries(statusConfig).map(([key, cfg]) => (
-                <option key={key} value={key}>{cfg.icon} {cfg.label}</option>
-              ))}
-            </select>
+        {/* FILTERS */}
+        <div className="flex flex-wrap items-center gap-4 mb-8 bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200">
+          <div className="flex-1 min-w-[300px] relative">
+            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <input
+              placeholder="Search by ID, Customer, Phone or Location..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all font-bold placeholder-slate-400 shadow-inner"
+            />
           </div>
 
-          {/* DATA GRID */}
-          <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left whitespace-nowrap table-auto min-w-[1200px]">
+          <select
+            value={statusFilter}
+            onChange={(e) => handleStatusChangeFilter(e.target.value)}
+            className="min-w-[200px] px-5 py-2.5 border border-slate-200 rounded-xl text-xs bg-slate-50 outline-none focus:bg-white focus:border-blue-500 font-black text-slate-700 uppercase focus:ring-4 focus:ring-blue-50 transition-all appearance-none cursor-pointer tracking-widest"
+          >
+            <option value="all">💳 All Transactions</option>
+            {Object.entries(statusConfig).map(([key, cfg]) => (
+              <option key={key} value={key}>{cfg.icon} {cfg.label}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* DATA GRID */}
+        <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left whitespace-nowrap table-auto min-w-[1200px]">
               <thead className="bg-slate-50/80 border-b border-slate-100 uppercase text-[10px] font-bold tracking-widest text-slate-400">
                 <tr>
+                  <th className="px-6 py-5">Settlement</th>
                   <th className="px-6 py-5">Intel & Time</th>
                   <th className="px-6 py-5">Customer Profile</th>
                   <th className="px-6 py-5">Route Analysis</th>
-                  <th className="px-6 py-5">Hub & Meta</th>
+
                   <th className="px-6 py-5">Fleet Assets</th>
                   <th className="px-6 py-5">Operational Metrics</th>
                   <th className="px-6 py-5">Financial Audit</th>
                   <th className="px-6 py-5">Status Engine</th>
-                  <th className="px-6 py-5 text-right">Settlement</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
@@ -184,7 +183,18 @@ function BookingsContent() {
 
                   return (
                     <tr key={booking.id} className={`transition-all duration-300 group hover:brightness-[0.98] ${config.row}`}>
-
+                      {/* Settlement (Actions) */}
+                      <td className="px-6 py-6 text-right">
+                        <div className="flex justify-end items-center gap-2">
+                          <a
+                            href={`/dashboard/bookings/${booking.id}/show`}
+                            className="p-3 bg-white hover:bg-slate-900 border border-slate-200 text-slate-400 hover:text-white rounded-2xl shadow-sm transition-all hover:-translate-y-1 active:scale-95 group/btn"
+                            title="Audit Management"
+                          >
+                            <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                          </a>
+                        </div>
+                      </td>
                       {/* Intel & Time */}
                       <td className="px-6 py-6 border-l-4 border-transparent group-hover:border-blue-500 transition-all">
                         <div className="flex flex-col gap-1">
@@ -236,19 +246,7 @@ function BookingsContent() {
                         </div>
                       </td>
 
-                      {/* Hub & Meta */}
-                      <td className="px-6 py-6">
-                        <div className="flex flex-col gap-1.5">
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-bold uppercase text-slate-400 tracking-normal">Hub Origin</span>
-                            <span className="text-sm font-bold text-slate-900">{booking.hub || "Remote / Web"}</span>
-                          </div>
-                          <div className="flex flex-col mt-1">
-                            <span className="text-[10px] font-bold uppercase text-slate-400 tracking-normal">Handled By</span>
-                            <span className="text-xs font-semibold text-slate-600 italic">{booking.allotedTo || "Direct Dispatch"}</span>
-                          </div>
-                        </div>
-                      </td>
+
 
                       {/* Fleet Assets */}
                       <td className="px-6 py-6">
@@ -296,7 +294,7 @@ function BookingsContent() {
                         <div className="flex flex-col gap-1 text-right">
                           <div className="flex flex-col">
                             <span className="text-[10px] font-bold text-slate-300 uppercase tracking-normal">Grand Total</span>
-                            <span className="text-base font-bold text-slate-900">₹{grandTotal}</span>
+                            <span className="text-base font-bold text-slate-900">₹{booking.fare}</span>
                           </div>
                           <div className="flex flex-col mt-1">
                             <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-normal">Total Paid</span>
@@ -304,7 +302,7 @@ function BookingsContent() {
                           </div>
                           <div className="flex flex-col mt-1 border-t border-slate-100 pt-1">
                             <span className="text-[10px] font-bold text-rose-300 uppercase tracking-normal">Pending Due</span>
-                            <span className="text-sm font-bold text-rose-600">₹{totalDue}</span>
+                            <span className="text-sm font-bold text-rose-600">₹{(booking.fare) - totalPaid}</span>
                           </div>
                         </div>
                       </td>
@@ -337,18 +335,7 @@ function BookingsContent() {
                         </div>
                       </td>
 
-                      {/* Settlement (Actions) */}
-                      <td className="px-6 py-6 text-right">
-                        <div className="flex justify-end items-center gap-2">
-                          <a
-                            href={`/dashboard/bookings/${booking.id}/show`}
-                            className="p-3 bg-white hover:bg-slate-900 border border-slate-200 text-slate-400 hover:text-white rounded-2xl shadow-sm transition-all hover:-translate-y-1 active:scale-95 group/btn"
-                            title="Audit Management"
-                          >
-                            <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                          </a>
-                        </div>
-                      </td>
+
 
                     </tr>
                   )
