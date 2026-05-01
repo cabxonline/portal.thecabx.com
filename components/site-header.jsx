@@ -1,14 +1,57 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Search, Bell, Settings } from "lucide-react";
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const router = useRouter();
   const paths = pathname.split("/").filter(Boolean);
   const currentPage = paths[paths.length - 1] || 'Dashboard';
+
+  const [newCount, setNewCount] = useState(0);
+  const latestIdRef = useRef(0);
+  const initialLoadDone = useRef(false);
+
+  useEffect(() => {
+    const pollBookings = async () => {
+      try {
+        const data = await api(`/bookings/poll/latest?lastId=${latestIdRef.current}`);
+        if (data) {
+          setNewCount(data.newCount);
+          
+          if (data.hasNew && initialLoadDone.current) {
+            toast.success("🚨 New Booking Received!", {
+                description: "A new order has arrived. Please check the Bookings list.",
+                duration: 5000,
+            });
+            // Optional: Try playing a sound
+            try {
+                const audio = new Audio('/ping.mp3');
+                audio.play().catch(e => console.log('Audio playback blocked'));
+            } catch(e) {}
+          }
+
+          if (data.latestId > latestIdRef.current) {
+            latestIdRef.current = data.latestId;
+          }
+          initialLoadDone.current = true;
+        }
+      } catch (err) {
+        console.error("Polling error:", err);
+      }
+    };
+
+    pollBookings(); // Initial check
+    const interval = setInterval(pollBookings, 15000); // Check every 15s
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-6 transition-all z-10 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)]">
@@ -37,9 +80,16 @@ export function SiteHeader() {
          </div>
 
          {/* Notification Bell */}
-         <button className="relative p-2.5 text-slate-500 hover:text-blue-600 bg-slate-50 border border-slate-100 hover:bg-blue-50 rounded-full transition-all shadow-sm">
+         <button 
+            onClick={() => router.push('/dashboard/bookings?status=new_booking')}
+            className="relative p-2.5 text-slate-500 hover:text-blue-600 bg-slate-50 border border-slate-100 hover:bg-blue-50 rounded-full transition-all shadow-sm"
+         >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white"></span>
+            {newCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full border-2 border-white flex items-center justify-center animate-pulse">
+                    {newCount > 9 ? '9+' : newCount}
+                </span>
+            )}
          </button>
 
          {/* Settings */}

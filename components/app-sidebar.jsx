@@ -65,15 +65,19 @@ export function AppSidebar(props) {
     { title: "Cancelled", url: "/dashboard/bookings?status=cancelled", icon: <ClipboardListIcon /> }
   ]
 
+  const bookingSection1 = [
+    { title: "Package Bookings", url: "/dashboard/package-bookings", icon: <ClipboardListIcon /> },
+  ]
+
   const manualFeaturesSection = [
     // { title: "Manual Pricing", url: "/dashboard/pricing", icon: <StoreIcon /> },
-    { title: "Trending Fares (TYT)", url: "/dashboard/tyt", icon: <LayoutDashboardIcon /> }
+    { title: "Trending Fares (TYT)", url: "/dashboard/tyt", icon: <LayoutDashboardIcon /> },
+    { title: "Coupons & Offers", url: "/dashboard/coupons", icon: <StoreIcon /> }
   ]
 
   const contentSection = [
     { title: "Package Categories", url: "/dashboard/content/categories", icon: <LayoutDashboardIcon /> },
     { title: "Tour Packages", url: "/dashboard/content/packages", icon: <StoreIcon /> },
-    { title: "Package Booking", url: "/dashboard/content/enquiries", icon: <ClipboardListIcon /> },
     { title: "TYT Enquiries", url: "/dashboard/content/tyt-enquiries", icon: <ClipboardListIcon /> }
   ]
 
@@ -205,6 +209,11 @@ export function AppSidebar(props) {
           Booking
         </SidebarGroupLabel>
         {renderMenu(bookingSection)}
+
+        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+          Package Booking
+        </SidebarGroupLabel>
+        {renderMenu(bookingSection1)}
 
         {/* <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
           Marketplace

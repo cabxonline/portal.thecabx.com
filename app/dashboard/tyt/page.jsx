@@ -33,6 +33,16 @@ export default function TYTManager() {
   const [bulkUploading, setBulkUploading] = useState(false)
   const fileInputRef = useRef(null)
 
+  // TYT Factory States
+  const [activeMainTab, setActiveMainTab] = useState("stocks") // "stocks" | "factory"
+  const [activeSubTab, setActiveSubTab] = useState("roundtrip") // "roundtrip" | "local" | "airport"
+  const DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+  const [factoryConfig, setFactoryConfig] = useState({
+    roundtrip: DAYS.reduce((acc, day) => ({ ...acc, [day]: { trend: 'UP', percentage: 0 } }), {}),
+    local:     DAYS.reduce((acc, day) => ({ ...acc, [day]: { trend: 'UP', percentage: 0 } }), {})
+  })
+  const [savingFactory, setSavingFactory] = useState(false)
+
   const loadData = async () => {
     try {
       const res = await api("/tyt")
@@ -42,6 +52,20 @@ export default function TYTManager() {
       // Sync car categories for the selector
       const categoriesData = await api("/car-categories")
       setCategories(categoriesData)
+
+      // Load Factory Trends
+      const factoryRes = await api("/tyt/factory")
+      if (Array.isArray(factoryRes)) {
+        setFactoryConfig(prev => {
+          const newConfig = { ...prev }
+          factoryRes.forEach(f => {
+             if (f.tripType === "roundtrip" || f.tripType === "local") {
+                 newConfig[f.tripType] = { ...newConfig[f.tripType], ...f.config }
+             }
+          })
+          return newConfig
+        })
+      }
     } catch (err) {
       toast.error("Network sync failed: could not fetch metadata")
     } finally {
@@ -164,6 +188,39 @@ export default function TYTManager() {
     reader.readAsText(file)
   }
 
+  // TYT FACTORY HANDLERS
+  const handleFactoryChange = (tripType, day, field, value) => {
+    setFactoryConfig(prev => ({
+      ...prev,
+      [tripType]: {
+        ...prev[tripType],
+        [day]: {
+          ...prev[tripType][day],
+          [field]: value
+        }
+      }
+    }))
+  }
+
+  const handleSaveFactory = async () => {
+    if (activeSubTab === "airport") return;
+    setSavingFactory(true)
+    try {
+      await api("/tyt/factory", {
+        method: "POST",
+        body: JSON.stringify({
+          tripType: activeSubTab,
+          config: factoryConfig[activeSubTab]
+        })
+      })
+      toast.success(`${activeSubTab.toUpperCase()} factory trends saved!`)
+    } catch (err) {
+      toast.error("Failed to save factory trends")
+    } finally {
+      setSavingFactory(false)
+    }
+  }
+
   const openNewModal = () => {
     setForm({ from: "", car: "", price: "", trend: "UP" })
     setEditingId(null)
@@ -239,8 +296,26 @@ export default function TYTManager() {
           </div>
         </div>
 
-        {/* Dynamic Data Grid */}
-        <div className="bg-white rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden">
+        {/* Tabs */}
+        <div className="flex gap-4 mb-6 border-b border-slate-200">
+           <button 
+             onClick={() => setActiveMainTab("stocks")}
+             className={`pb-3 text-sm font-bold border-b-2 transition-colors ${activeMainTab === "stocks" ? "border-blue-600 text-blue-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+           >
+             Stock Routes
+           </button>
+           <button 
+             onClick={() => setActiveMainTab("factory")}
+             className={`pb-3 text-sm font-bold border-b-2 transition-colors ${activeMainTab === "factory" ? "border-blue-600 text-blue-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+           >
+             TYT Factory
+           </button>
+        </div>
+
+        {activeMainTab === "stocks" ? (
+          <>
+            {/* Dynamic Data Grid */}
+            <div className="bg-white rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -306,6 +381,71 @@ export default function TYTManager() {
             </table>
           </div>
         </div>
+        </>
+        ) : (
+          <div className="bg-white rounded-[1.5rem] shadow-sm border border-slate-200 overflow-hidden p-6">
+             {/* Sub Tabs */}
+             <div className="flex gap-3 mb-6 p-1 bg-slate-50 rounded-xl w-fit">
+                {["roundtrip", "local", "airport"].map(t => (
+                   <button 
+                     key={t}
+                     onClick={() => setActiveSubTab(t)}
+                     className={`px-4 py-2 rounded-lg text-sm font-bold capitalize transition-all ${activeSubTab === t ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                   >
+                     {t}
+                   </button>
+                ))}
+             </div>
+             
+             {activeSubTab === "airport" ? (
+                <div className="py-12 flex flex-col items-center justify-center text-slate-400">
+                   <TrendingUp className="w-12 h-12 mb-4 opacity-50" />
+                   <h3 className="text-xl font-black text-slate-700">Airport Trends</h3>
+                   <p className="mt-2 font-medium">Coming soon in a future update.</p>
+                </div>
+             ) : (
+                <div className="space-y-6 max-w-4xl">
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {DAYS.map(day => (
+                         <div key={day} className="flex items-center gap-4 p-4 border border-slate-100 rounded-xl bg-slate-50">
+                            <div className="w-24 font-black text-slate-700 capitalize">{day}</div>
+                            <div className="flex-1 flex gap-2">
+                               <select 
+                                 value={factoryConfig[activeSubTab][day].trend}
+                                 onChange={(e) => handleFactoryChange(activeSubTab, day, "trend", e.target.value)}
+                                 className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm outline-none focus:border-blue-500 font-bold text-slate-700 appearance-none"
+                               >
+                                  <option value="UP">UP 📈</option>
+                                  <option value="DOWN">DOWN 📉</option>
+                               </select>
+                               <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 focus-within:border-blue-500">
+                                  <input 
+                                    type="number" 
+                                    min="0" max="100"
+                                    value={factoryConfig[activeSubTab][day].percentage}
+                                    onChange={(e) => handleFactoryChange(activeSubTab, day, "percentage", Number(e.target.value))}
+                                    className="w-16 py-2 outline-none text-sm font-black text-slate-900 text-right bg-transparent"
+                                  />
+                                  <span className="text-slate-400 font-bold text-sm">%</span>
+                               </div>
+                            </div>
+                         </div>
+                      ))}
+                   </div>
+                   
+                   <div className="pt-4 border-t border-slate-100 flex justify-end">
+                      <button 
+                        onClick={handleSaveFactory}
+                        disabled={savingFactory}
+                        className="py-3 px-8 rounded-xl bg-blue-600 text-white hover:bg-blue-700 font-bold text-sm transition-all shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] disabled:opacity-50"
+                      >
+                         {savingFactory ? "Saving..." : "Save Configuration"}
+                      </button>
+                   </div>
+                </div>
+             )}
+          </div>
+        )}
 
         {/* Modal Layer */}
         {isModalOpen && (
