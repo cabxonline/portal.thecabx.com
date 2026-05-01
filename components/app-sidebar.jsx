@@ -28,7 +28,8 @@ import {
   ShieldIcon,
   TerminalIcon,
   CommandIcon,
-  ClipboardListIcon
+  ClipboardListIcon,
+  HeadphonesIcon
 } from "lucide-react"
 
 export function AppSidebar(props) {
@@ -74,11 +75,15 @@ export function AppSidebar(props) {
     { title: "Trending Fares (TYT)", url: "/dashboard/tyt", icon: <LayoutDashboardIcon /> },
     { title: "Coupons & Offers", url: "/dashboard/coupons", icon: <StoreIcon /> }
   ]
-
   const contentSection = [
     { title: "Package Categories", url: "/dashboard/content/categories", icon: <LayoutDashboardIcon /> },
     { title: "Tour Packages", url: "/dashboard/content/packages", icon: <StoreIcon /> },
-    { title: "TYT Enquiries", url: "/dashboard/content/tyt-enquiries", icon: <ClipboardListIcon /> }
+    { title: "TYT Enquiries", url: "/dashboard/content/tyt-enquiries", icon: <ClipboardListIcon /> },
+    { title: "Policy Management", url: "/dashboard/content/policies", icon: <ShieldIcon /> }
+  ]
+
+  const supportSection = [
+    { title: "Support Tickets", url: "/dashboard/support", icon: <HeadphonesIcon /> }
   ]
 
 
@@ -229,6 +234,11 @@ export function AppSidebar(props) {
           Content Features
         </SidebarGroupLabel>
         {renderMenu(contentSection)}
+
+        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+          Support
+        </SidebarGroupLabel>
+        {renderMenu(supportSection)}
 
         <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
           Intelligence
