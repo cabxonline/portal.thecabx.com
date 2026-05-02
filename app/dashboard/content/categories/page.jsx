@@ -22,6 +22,7 @@ export default function CategoryManager() {
   
   const [form, setForm] = useState({
     name: "",
+    description: "",
     image: "",
     isActive: true
   })
@@ -79,7 +80,7 @@ export default function CategoryManager() {
   }
 
   const openNewModal = () => {
-    setForm({ name: "", image: "", isActive: true })
+    setForm({ name: "", description: "", image: "", isActive: true })
     setEditingId(null)
     setIsModalOpen(true)
   }
@@ -87,6 +88,7 @@ export default function CategoryManager() {
   const openEditModal = (cat) => {
     setForm({
       name: cat.name,
+      description: cat.description || "",
       image: cat.image || "",
       isActive: cat.isActive
     })
@@ -144,6 +146,12 @@ export default function CategoryManager() {
                     <h3 className="text-lg font-black text-slate-900">{cat.name}</h3>
                     {cat.isActive ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <XCircle className="w-5 h-5 text-slate-300" />}
                  </div>
+
+                 {cat.description && (
+                    <p className="text-xs text-slate-500 font-medium line-clamp-2 mb-4 leading-relaxed italic">
+                      {cat.description}
+                    </p>
+                  )}
                  
                  <div className="flex gap-2 mt-4 pt-4 border-t border-slate-100">
                     <button onClick={() => openEditModal(cat)} className="flex-1 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 font-bold text-xs hover:bg-slate-100 transition-colors flex items-center justify-center gap-2">
@@ -179,6 +187,11 @@ export default function CategoryManager() {
                  <div>
                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Visual Asset URL</label>
                    <input value={form.image} onChange={(e) => setForm({...form, image: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 font-bold" placeholder="https://image-link.com/..." />
+                 </div>
+
+                 <div>
+                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Summary Description</label>
+                   <textarea value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 font-bold min-h-[100px] resize-none" placeholder="Briefly describe this category..." />
                  </div>
 
                  <div className="flex items-center gap-2 py-2">

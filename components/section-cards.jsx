@@ -55,7 +55,7 @@ export function SectionCards({ stats }) {
 
     <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 md:grid-cols-2 xl:grid-cols-4">
 
-      {cards.map((card,i)=>(
+      {cards.map((card, i) => (
 
         <Link key={i} href={card.link}>
 
@@ -74,7 +74,7 @@ export function SectionCards({ stats }) {
               <CardAction>
                 <Badge variant="outline">
 
-                  {card.up ? <TrendingUpIcon/> : <TrendingDownIcon/>}
+                  {card.up ? <TrendingUpIcon /> : <TrendingDownIcon />}
 
                   {card.trend}
 
@@ -90,8 +90,8 @@ export function SectionCards({ stats }) {
                 {card.up ? "Trending up" : "Trending down"}
 
                 {card.up
-                  ? <TrendingUpIcon className="size-4"/>
-                  : <TrendingDownIcon className="size-4"/>
+                  ? <TrendingUpIcon className="size-4" />
+                  : <TrendingDownIcon className="size-4" />
                 }
 
               </div>

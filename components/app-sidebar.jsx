@@ -79,6 +79,7 @@ export function AppSidebar(props) {
     { title: "Package Categories", url: "/dashboard/content/categories", icon: <LayoutDashboardIcon /> },
     { title: "Tour Packages", url: "/dashboard/content/packages", icon: <StoreIcon /> },
     { title: "TYT Enquiries", url: "/dashboard/content/tyt-enquiries", icon: <ClipboardListIcon /> },
+    { title: "Blog Management", url: "/dashboard/content/blogs", icon: <ClipboardListIcon /> },
     { title: "Policy Management", url: "/dashboard/content/policies", icon: <ShieldIcon /> }
   ]
 
