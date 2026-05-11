@@ -36,11 +36,13 @@ export default function TYTManager() {
   // TYT Factory States
   const [activeMainTab, setActiveMainTab] = useState("stocks") // "stocks" | "factory"
   const [activeSubTab, setActiveSubTab] = useState("roundtrip") // "roundtrip" | "local" | "airport"
+  const [selectedCity, setSelectedCity] = useState("All")
   const DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   const [factoryConfig, setFactoryConfig] = useState({
     roundtrip: DAYS.reduce((acc, day) => ({ ...acc, [day]: { trend: 'UP', percentage: 0 } }), {}),
     local:     DAYS.reduce((acc, day) => ({ ...acc, [day]: { trend: 'UP', percentage: 0 } }), {})
   })
+  const [allFactoryTrends, setAllFactoryTrends] = useState([])
   const [savingFactory, setSavingFactory] = useState(false)
 
   const loadData = async () => {
@@ -56,15 +58,7 @@ export default function TYTManager() {
       // Load Factory Trends
       const factoryRes = await api("/tyt/factory")
       if (Array.isArray(factoryRes)) {
-        setFactoryConfig(prev => {
-          const newConfig = { ...prev }
-          factoryRes.forEach(f => {
-             if (f.tripType === "roundtrip" || f.tripType === "local") {
-                 newConfig[f.tripType] = { ...newConfig[f.tripType], ...f.config }
-             }
-          })
-          return newConfig
-        })
+        setAllFactoryTrends(factoryRes)
       }
     } catch (err) {
       toast.error("Network sync failed: could not fetch metadata")
@@ -76,6 +70,23 @@ export default function TYTManager() {
   useEffect(() => {
     loadData()
   }, [])
+
+  // Sync factoryConfig when city or subTab changes
+  useEffect(() => {
+    const currentTrend = allFactoryTrends.find(f => f.tripType === activeSubTab && f.city === selectedCity)
+    if (currentTrend && currentTrend.config) {
+      setFactoryConfig(prev => ({
+        ...prev,
+        [activeSubTab]: currentTrend.config
+      }))
+    } else {
+      // Reset to default if no specific config found
+      setFactoryConfig(prev => ({
+        ...prev,
+        [activeSubTab]: DAYS.reduce((acc, day) => ({ ...acc, [day]: { trend: 'UP', percentage: 0 } }), {})
+      }))
+    }
+  }, [selectedCity, activeSubTab, allFactoryTrends])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -210,10 +221,12 @@ export default function TYTManager() {
         method: "POST",
         body: JSON.stringify({
           tripType: activeSubTab,
+          city: selectedCity,
           config: factoryConfig[activeSubTab]
         })
       })
-      toast.success(`${activeSubTab.toUpperCase()} factory trends saved!`)
+      toast.success(`${activeSubTab.toUpperCase()} trends saved for ${selectedCity}!`)
+      loadData()
     } catch (err) {
       toast.error("Failed to save factory trends")
     } finally {
@@ -395,6 +408,25 @@ export default function TYTManager() {
                      {t}
                    </button>
                 ))}
+             </div>
+
+             {/* City Selection for Factory */}
+             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 p-6 bg-blue-50/50 border border-blue-100 rounded-[1.5rem]">
+               <div>
+                 <h4 className="text-lg font-black text-slate-800">Geographic Targeting</h4>
+                 <p className="text-xs font-medium text-slate-500">Apply these trends to a specific city or use 'All' as a global default.</p>
+               </div>
+               <div className="w-full md:w-64 bg-white rounded-xl shadow-sm border border-slate-200">
+                  <CityAutocomplete 
+                    value={selectedCity === "All" ? "" : selectedCity}
+                    onSelect={(city) => setSelectedCity(city.name)}
+                    placeholder="Global Default (All)"
+                    className="px-4 py-3 border-0 bg-transparent text-sm font-bold w-full"
+                  />
+                  {selectedCity !== "All" && (
+                    <button onClick={() => setSelectedCity("All")} className="px-4 pb-2 text-[10px] font-black text-rose-500 hover:underline uppercase tracking-tight">Clear to Global</button>
+                  )}
+               </div>
              </div>
              
              {activeSubTab === "airport" ? (

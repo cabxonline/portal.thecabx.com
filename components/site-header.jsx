@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Search, Bell, Settings } from "lucide-react";
+import { Search, Bell, Settings, ChevronRight } from "lucide-react";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -54,47 +54,50 @@ export function SiteHeader() {
   }, []);
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-6 transition-all z-10 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)]">
+    <header className="sticky top-0 h-20 shrink-0 items-center justify-between border-b border-slate-100 bg-white/80 backdrop-blur-xl px-6 lg:px-10 transition-all z-40 flex shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
       
-      {/* Left Axis: Breadcrumbs */}
-      <div className="flex items-center gap-3">
-        <SidebarTrigger className="-ml-1 text-slate-500 hover:text-blue-600 transition-colors" />
-        <Separator orientation="vertical" className="mx-1 h-5 bg-slate-200" />
-        <div className="flex items-center gap-2 text-sm font-bold capitalize tracking-wide text-slate-900">
-           <span className="text-slate-400 font-medium">Workspace <span className="mx-1">/</span></span>
-           <span className="text-blue-700">{currentPage.replace(/-/g, ' ')}</span>
+      {/* Left Axis: Breadcrumbs & Trigger */}
+      <div className="flex items-center gap-6">
+        <SidebarTrigger className="-ml-2 text-slate-400 hover:text-blue-600 transition-all hover:scale-110 active:scale-95" />
+        <div className="hidden sm:flex items-center gap-3">
+          <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+             <span>Workspace</span>
+             <ChevronRight className="w-3 h-3 text-slate-300" />
+             <span className="text-blue-600">{currentPage.replace(/-/g, ' ')}</span>
+          </div>
         </div>
       </div>
 
-      {/* Right Axis: Utils */}
-      <div className="flex items-center gap-3 lg:gap-5">
+      {/* Right Axis: Intelligence & System Utils */}
+      <div className="flex items-center gap-4">
          
-         {/* Search Box */}
-         <div className="relative hidden md:flex items-center">
-            <Search className="absolute left-3.5 w-4 h-4 text-slate-400" />
+         {/* Command Search */}
+         <div className="relative hidden lg:flex items-center group">
+            <Search className="absolute left-4 w-4 h-4 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
             <input 
               type="text" 
-              placeholder="Search bookings, drivers..." 
-              className="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-sm outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all font-medium text-slate-700 placeholder-slate-400 w-48 lg:w-72 shadow-inner shadow-slate-100"
+              placeholder="Query fleet data..." 
+              className="pl-11 pr-6 py-2.5 bg-slate-50/50 border border-slate-200/60 rounded-2xl text-xs outline-none focus:border-blue-500/50 focus:bg-white focus:ring-4 focus:ring-blue-500/5 transition-all font-bold text-slate-700 placeholder-slate-400 w-64 xl:w-80 shadow-sm"
             />
          </div>
 
-         {/* Notification Bell */}
+         {/* Notification Nexus */}
          <button 
             onClick={() => router.push('/dashboard/bookings?status=new_booking')}
-            className="relative p-2.5 text-slate-500 hover:text-blue-600 bg-slate-50 border border-slate-100 hover:bg-blue-50 rounded-full transition-all shadow-sm"
+            className="relative w-11 h-11 flex items-center justify-center text-slate-400 hover:text-blue-600 bg-slate-50/50 border border-slate-200/60 hover:bg-white hover:shadow-xl hover:shadow-blue-500/5 rounded-2xl transition-all active:scale-90"
          >
-            <Bell className="w-4 h-4" />
+            <Bell className="w-5 h-5" />
             {newCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full border-2 border-white flex items-center justify-center animate-pulse">
+                <span className="absolute top-0 right-0 w-5 h-5 bg-blue-600 text-white text-[9px] font-black rounded-xl border-4 border-white flex items-center justify-center shadow-lg shadow-blue-500/20 animate-bounce">
                     {newCount > 9 ? '9+' : newCount}
                 </span>
             )}
          </button>
 
-         {/* Settings */}
-         <button className="p-2.5 text-slate-500 hover:text-blue-600 bg-slate-50 border border-slate-100 hover:bg-blue-50 rounded-full transition-all shadow-sm">
-            <Settings className="w-4 h-4" />
+         {/* System Settings */}
+         <button className="w-11 h-11 flex items-center justify-center text-slate-400 hover:text-slate-900 bg-slate-50/50 border border-slate-200/60 hover:bg-white hover:shadow-xl hover:shadow-slate-200/5 rounded-2xl transition-all active:scale-90">
+            <Settings className="w-5 h-5" />
          </button>
       </div>
 

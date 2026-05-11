@@ -128,19 +128,19 @@ export function AppSidebar(props) {
               <Link
                 href={item.url}
                 className={`
-                  flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200
+                  flex items-center gap-3 rounded-xl px-4 py-2.5 transition-all duration-300
                   ${isActive
-                    ? "bg-blue-50 text-blue-700 shadow-sm w-full font-bold border border-blue-100"
-                    : "hover:bg-slate-50 text-slate-600 font-medium hover:text-slate-900"
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 w-full font-black border border-blue-500"
+                    : "hover:bg-white/5 text-slate-400 font-bold hover:text-slate-50"
                   }
                 `}
               >
 
-                <span className={isActive ? "text-blue-600" : "text-slate-400"}>
+                <span className={isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300 transition-colors"}>
                   {item.icon}
                 </span>
 
-                <span>
+                <span className="tracking-wide">
                   {item.title}
                 </span>
 
@@ -189,8 +189,8 @@ export function AppSidebar(props) {
                 />
 
                 {/* Fallback box if image breaks */}
-                <div className="hidden aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-inner">
-                  <span className="font-bold text-xs">CX</span>
+                <div className="hidden aspect-square size-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-xl shadow-blue-500/20">
+                  <span className="font-black text-sm tracking-tighter">CX</span>
                 </div>
 
               </Link>
@@ -211,42 +211,37 @@ export function AppSidebar(props) {
 
         {renderMenu(navMain)}
 
-        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+        <SidebarGroupLabel className="mt-8 mb-2 text-[10px] uppercase font-black tracking-[0.2em] text-slate-500 px-4">
           Booking
         </SidebarGroupLabel>
         {renderMenu(bookingSection)}
 
-        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+        <SidebarGroupLabel className="mt-8 mb-2 text-[10px] uppercase font-black tracking-[0.2em] text-slate-500 px-4">
           Package Booking
         </SidebarGroupLabel>
         {renderMenu(bookingSection1)}
 
-        {/* <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
-          Marketplace
-        </SidebarGroupLabel>
-        {renderMenu(vendorsSection)} */}
-
-        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+        <SidebarGroupLabel className="mt-8 mb-2 text-[10px] uppercase font-black tracking-[0.2em] text-slate-500 px-4">
           Manual Features
         </SidebarGroupLabel>
         {renderMenu(manualFeaturesSection)}
 
-        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+        <SidebarGroupLabel className="mt-8 mb-2 text-[10px] uppercase font-black tracking-[0.2em] text-slate-500 px-4">
           Content Features
         </SidebarGroupLabel>
         {renderMenu(contentSection)}
 
-        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+        <SidebarGroupLabel className="mt-8 mb-2 text-[10px] uppercase font-black tracking-[0.2em] text-slate-500 px-4">
           Support
         </SidebarGroupLabel>
         {renderMenu(supportSection)}
 
-        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+        <SidebarGroupLabel className="mt-8 mb-2 text-[10px] uppercase font-black tracking-[0.2em] text-slate-500 px-4">
           Intelligence
         </SidebarGroupLabel>
         {renderMenu(analyticsSection)}
 
-        <SidebarGroupLabel className="mt-6 mb-1 text-[10px] uppercase font-bold tracking-widest text-slate-400 px-3">
+        <SidebarGroupLabel className="mt-8 mb-2 text-[10px] uppercase font-black tracking-[0.2em] text-slate-500 px-4">
           System Administration
         </SidebarGroupLabel>
         {renderMenu(adminSection)}
