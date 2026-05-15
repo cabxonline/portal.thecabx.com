@@ -163,22 +163,26 @@ export default function ShowBooking() {
 
   const handleDownloadInvoice = async () => {
     try {
-      const element = document.getElementById("invoice-capture-area")
-      if (!element) return
+      toast.loading("Generating Invoice...", { id: "invoice-toast" })
 
-      toast.loading("Generating High-Res Invoice...", { id: "invoice-toast" })
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/bookings/${id}/invoice`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
 
-      // Wait a tick to ensure rendering
-      await new Promise(resolve => setTimeout(resolve, 100))
-      
-      const canvas = await html2canvas(element, { scale: 2, useCORS: true, logging: false })
-      const imgData = canvas.toDataURL("image/jpeg", 0.95)
-      
-      const pdf = new jsPDF({ orientation: "portrait", unit: "px", format: [canvas.width, canvas.height] })
-      pdf.addImage(imgData, "JPEG", 0, 0, canvas.width, canvas.height)
-      pdf.save(`Invoice_${booking.bookingNumber}.pdf`)
+      if (!response.ok) throw new Error("Failed to fetch invoice from server")
 
-      toast.success("Invoice generated successfully!", { id: "invoice-toast" })
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `Invoice_${booking.bookingNumber}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+
+      toast.success("Invoice downloaded successfully!", { id: "invoice-toast" })
     } catch (err) {
       console.error("PDF Generation Error:", err)
       toast.error("Failed to generate PDF. Check console for details.", { id: "invoice-toast" })
@@ -482,6 +486,26 @@ export default function ShowBooking() {
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Drop-off Location</p>
                   <p className="text-slate-900 font-medium">{booking?.dropAddress || "N/A"}</p>
                 </div>
+
+                {/* Route Metrics */}
+                {(booking?.totalDistance || booking?.totalDuration) && (
+                  <div className="pt-4 mt-4 border-t border-slate-100 grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Estimated Distance</p>
+                      <p className="font-black text-slate-900 flex items-center gap-2">
+                        <Navigation className="w-3.5 h-3.5 text-blue-500" />
+                        {booking.totalDistance}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Estimated Duration</p>
+                      <p className="font-black text-slate-900 flex items-center gap-2">
+                        <CalendarClock className="w-3.5 h-3.5 text-indigo-500" />
+                        {booking.totalDuration}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 {booking?.scheduledAt && (
                   <div className="relative mt-8">
@@ -1037,78 +1061,78 @@ export default function ShowBooking() {
         <div className="absolute left-[-9999px] top-[-9999px]">
           <div id="invoice-capture-area" style={{ width: '800px', backgroundColor: '#fff', padding: '40px', color: '#0f172a' }}>
             <div className="flex justify-between items-start mb-8 border-b pb-8 border-slate-200">
-               <div>
-                  <h1 className="text-4xl font-black tracking-tight text-blue-600 mb-2">INVOICE</h1>
-                  <p className="text-slate-500 font-medium">Ref: #{booking?.bookingNumber}</p>
-                  <p className="text-slate-500 font-medium">Date: {new Date().toLocaleDateString()}</p>
-               </div>
-               <div className="text-right">
-                  <h2 className="text-2xl font-black tracking-tight text-slate-900">CabX Premium</h2>
-                  <p className="text-slate-500 font-medium">Corporate HQ</p>
-                  <p className="text-slate-500 font-medium">support@thecabx.com</p>
-               </div>
+              <div>
+                <h1 className="text-4xl font-black tracking-tight text-blue-600 mb-2">INVOICE</h1>
+                <p className="text-slate-500 font-medium">Ref: #{booking?.bookingNumber}</p>
+                <p className="text-slate-500 font-medium">Date: {new Date().toLocaleDateString()}</p>
+              </div>
+              <div className="text-right">
+                <h2 className="text-2xl font-black tracking-tight text-slate-900">CabX Premium</h2>
+                <p className="text-slate-500 font-medium">Corporate HQ</p>
+                <p className="text-slate-500 font-medium">support@thecabx.com</p>
+              </div>
             </div>
-            
+
             <div className="flex justify-between items-start mb-8">
-               <div>
-                  <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Billed To</h3>
-                  <p className="font-bold text-slate-900 text-lg">{booking?.guestName || booking?.user?.name || "Customer"}</p>
-                  <p className="text-slate-500 font-medium">{booking?.mobileNumber}</p>
-                  {booking?.corporateName && <p className="text-indigo-600 font-bold mt-1">{booking.corporateName}</p>}
-               </div>
-               <div className="text-right max-w-[300px]">
-                  <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Trip Details</h3>
-                  <p className="text-slate-900 font-medium truncate">Pickup: {booking?.pickupAddress}</p>
-                  <p className="text-slate-900 font-medium truncate">Drop: {booking?.dropAddress}</p>
-               </div>
+              <div>
+                <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Billed To</h3>
+                <p className="font-bold text-slate-900 text-lg">{booking?.guestName || booking?.user?.name || "Customer"}</p>
+                <p className="text-slate-500 font-medium">{booking?.mobileNumber}</p>
+                {booking?.corporateName && <p className="text-indigo-600 font-bold mt-1">{booking.corporateName}</p>}
+              </div>
+              <div className="text-right max-w-[300px]">
+                <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Trip Details</h3>
+                <p className="text-slate-900 font-medium truncate">Pickup: {booking?.pickupAddress}</p>
+                <p className="text-slate-900 font-medium truncate">Drop: {booking?.dropAddress}</p>
+              </div>
             </div>
 
             <table className="w-full text-left mb-8 border-t border-slate-200 pt-4">
-               <thead>
-                  <tr className="border-b border-slate-200">
-                     <th className="py-3 text-xs font-black uppercase tracking-widest text-slate-400">Description</th>
-                     <th className="py-3 text-right text-xs font-black uppercase tracking-widest text-slate-400">Amount</th>
-                  </tr>
-               </thead>
-               <tbody className="font-medium text-slate-700">
+              <thead>
+                <tr className="border-b border-slate-200">
+                  <th className="py-3 text-xs font-black uppercase tracking-widest text-slate-400">Description</th>
+                  <th className="py-3 text-right text-xs font-black uppercase tracking-widest text-slate-400">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="font-medium text-slate-700">
+                <tr className="border-b border-slate-100">
+                  <td className="py-4 font-bold text-slate-900">Base Fare ({booking?.carCategory?.name || 'Standard'})</td>
+                  <td className="py-4 text-right font-bold">₹{booking?.fare?.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                </tr>
+                {extraKmUsageCost > 0 && (
                   <tr className="border-b border-slate-100">
-                     <td className="py-4 font-bold text-slate-900">Base Fare ({booking?.carCategory?.name || 'Standard'})</td>
-                     <td className="py-4 text-right font-bold">₹{booking?.fare?.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                    <td className="py-4">Distance Charges ({totalKm} km @ ₹{costPerKm}/km)</td>
+                    <td className="py-4 text-right">₹{extraKmUsageCost.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                   </tr>
-                  {extraKmUsageCost > 0 && (
-                    <tr className="border-b border-slate-100">
-                       <td className="py-4">Distance Charges ({totalKm} km @ ₹{costPerKm}/km)</td>
-                       <td className="py-4 text-right">₹{extraKmUsageCost.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                    </tr>
-                  )}
-                  {tollsCost > 0 && (
-                    <tr className="border-b border-slate-100">
-                       <td className="py-4">Tolls & Taxes</td>
-                       <td className="py-4 text-right">₹{Number(tollsCost).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                    </tr>
-                  )}
-               </tbody>
+                )}
+                {tollsCost > 0 && (
+                  <tr className="border-b border-slate-100">
+                    <td className="py-4">Tolls & Taxes</td>
+                    <td className="py-4 text-right">₹{Number(tollsCost).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                  </tr>
+                )}
+              </tbody>
             </table>
 
             <div className="flex justify-end mb-8">
-               <div className="w-64">
-                  <div className="flex justify-between py-2 border-b border-slate-200 font-bold text-slate-900 text-lg">
-                     <span>Grand Total</span>
-                     <span>₹{totalFare.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                  </div>
-                  <div className="flex justify-between py-2 text-emerald-600 font-medium">
-                     <span>Amount Paid</span>
-                     <span>- ₹{amountPaid.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                  </div>
-                  <div className="flex justify-between py-3 font-black text-rose-600 text-xl border-t border-slate-900 mt-2">
-                     <span>Balance Due</span>
-                     <span>₹{pendingDues > 0 ? pendingDues.toLocaleString('en-IN', { minimumFractionDigits: 2 }) : "0.00"}</span>
-                  </div>
-               </div>
+              <div className="w-64">
+                <div className="flex justify-between py-2 border-b border-slate-200 font-bold text-slate-900 text-lg">
+                  <span>Grand Total</span>
+                  <span>₹{totalFare.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div className="flex justify-between py-2 text-emerald-600 font-medium">
+                  <span>Amount Paid</span>
+                  <span>- ₹{amountPaid.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div className="flex justify-between py-3 font-black text-rose-600 text-xl border-t border-slate-900 mt-2">
+                  <span>Balance Due</span>
+                  <span>₹{pendingDues > 0 ? pendingDues.toLocaleString('en-IN', { minimumFractionDigits: 2 }) : "0.00"}</span>
+                </div>
+              </div>
             </div>
 
             <div className="text-center pt-8 border-t border-slate-200 mt-16 text-slate-400 font-medium text-sm">
-               Thank you for riding with CabX. This is a computer generated invoice.
+              Thank you for riding with CabX. This is a computer generated invoice.
             </div>
           </div>
         </div>

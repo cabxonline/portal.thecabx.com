@@ -73,6 +73,7 @@ export function AppSidebar(props) {
   const manualFeaturesSection = [
     // { title: "Manual Pricing", url: "/dashboard/pricing", icon: <StoreIcon /> },
     { title: "Trending Fares (TYT)", url: "/dashboard/tyt", icon: <LayoutDashboardIcon /> },
+    { title: "Airport Rates", url: "/dashboard/airport-rates", icon: <StoreIcon /> },
     { title: "Coupons & Offers", url: "/dashboard/coupons", icon: <StoreIcon /> }
   ]
   const contentSection = [
@@ -180,7 +181,7 @@ export function AppSidebar(props) {
                 <img
                   src="/logo.png"
                   alt="CabX"
-                  className="h-10  w-10 object-contain"
+                  className="h-90  w-90 object-contain brightness-0 invert opacity-90"
                   onError={(e) => {
                     // Fallback to text if logo.png is not found in portal public dir
                     e.target.style.display = 'none';

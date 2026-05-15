@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata = {
-  title: "CabxCabs - Reliable Car Rental Services Across India",
-  description: "CabxCabs offers a wide range of car rental services across major Indian cities. Whether you need an airport pickup, outstation travel, or hourly rental, we have you covered with our fleet of well-maintained vehicles and trusted drivers.",
-  keywords: "CabxCabs, car rental, airport pickup, outstation travel, hourly rental, corporate transportation, reliable car service, trusted drivers, affordable fares",
+  title: "The Cabx - Reliable Car Rental Services Across India",
+  description: "The Cabx offers a wide range of car rental services across major Indian cities. Whether you need an airport pickup, outstation travel, or hourly rental, we have you covered with our fleet of well-maintained vehicles and trusted drivers.",
+  keywords: "The Cabx, car rental, airport pickup, outstation travel, hourly rental, corporate transportation, reliable car service, trusted drivers, affordable fares",
 }
 
 export default function RootLayout({ children }) {

@@ -95,7 +95,7 @@ export default function RoleArchitect() {
                   </div>
                   
                   <h3 className="text-xl font-bold text-slate-900 mb-2 uppercase tracking-tight">{role.name}</h3>
-                  <p className="text-xs font-medium text-slate-400 mb-6 uppercase tracking-[0.1em]">Security Group ID: {role.id.slice(0, 8)}...</p>
+                  <p className="text-xs font-medium text-slate-400 mb-6 uppercase tracking-[0.1em]">Security Group ID: {String(role.id).slice(0, 8)}...</p>
                   
                   <div className="grid grid-cols-2 gap-4 mb-8">
                     <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
