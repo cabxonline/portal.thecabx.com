@@ -73,6 +73,8 @@ export function AppSidebar(props) {
   const manualFeaturesSection = [
     // { title: "Manual Pricing", url: "/dashboard/pricing", icon: <StoreIcon /> },
     { title: "Trending Fares (TYT)", url: "/dashboard/tyt", icon: <LayoutDashboardIcon /> },
+    { title: "Manual Multipliers", url: "/dashboard/multipliers", icon: <BarChart3Icon /> },
+    { title: "Daily Rate Logs", url: "/dashboard/tyt-logs", icon: <ClipboardListIcon /> },
     { title: "Airport Rates", url: "/dashboard/airport-rates", icon: <StoreIcon /> },
     { title: "Coupons & Offers", url: "/dashboard/coupons", icon: <StoreIcon /> }
   ]
